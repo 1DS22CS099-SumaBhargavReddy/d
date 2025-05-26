@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      containers:
+        - name: app-container
+          image: 1ds22cs141/python-app:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: my-config
+                  key: APP_ENV
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: DB_PASSWORD
+
+#kubectl apply -f configmap.yaml
+# kubectl apply -f secret.yaml
+# kubectl apply -f deployment.yaml
+#kubectl apply -f service.yaml
+#kubectl get pods
+#kubectl get svc
+#kubectl port-forward svc/python-service 8095:80
